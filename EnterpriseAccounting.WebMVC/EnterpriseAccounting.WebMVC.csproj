@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-EnterpriseAccounting.Web-5b0488dd-325d-4d75-a2ba-4548c584a94f</UserSecretsId>
+    <UserSecretsId>aspnet-EnterpriseAccounting.WebMVC-ede61db3-1c80-420c-a649-cee798e7184c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

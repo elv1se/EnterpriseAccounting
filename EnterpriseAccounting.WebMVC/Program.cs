@@ -1,9 +1,9 @@
-using EnterpriseAccounting.Web.Data;
-using EnterpriseAccounting.Web.Extensions;
+using EnterpriseAccounting.WebMVC.Data;
+using EnterpriseAccounting.WebMVC.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace EnterpriseAccounting.Web;
+namespace EnterpriseAccounting.WebMVC;
 
 public class Program
 {
@@ -16,7 +16,7 @@ public class Program
 
 		builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 			.AddEntityFrameworkStores<ApplicationDbContext>();
-		builder.Services.AddRazorPages();
+		builder.Services.AddControllersWithViews();
 
 		var app = builder.Build();
 
@@ -26,7 +26,7 @@ public class Program
 		}
 		else
 		{
-			app.UseExceptionHandler("/Error");
+			app.UseExceptionHandler("/Home/Error");
 			app.UseHsts();
 		}
 
@@ -37,6 +37,9 @@ public class Program
 
 		app.UseAuthorization();
 
+		app.MapControllerRoute(
+			name: "default",
+			pattern: "{controller=Home}/{action=Index}/{id?}");
 		app.MapRazorPages();
 
 		app.Run();
