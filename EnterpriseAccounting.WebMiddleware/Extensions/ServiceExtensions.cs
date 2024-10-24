@@ -19,7 +19,7 @@ public static class ServiceExtensions
 	public static void ConfigureSqlContext(this IServiceCollection services,
 		IConfiguration configuration) =>
 		services.AddDbContext<EnterpriseAccountingContext>(opts =>
-			opts.UseSqlServer(configuration.GetConnectionString("DbConnection"), b =>
+			opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b =>
 			{
 				b.EnableRetryOnFailure();
 			})
