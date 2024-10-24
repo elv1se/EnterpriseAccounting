@@ -14,6 +14,6 @@ internal class DepartmentRepository(EnterpriseAccountingContext dbContext) : Rep
 			.ToListAsync();
 
 	public IEnumerable<Department> GetDepartmentsTop(int rows) =>
-		 [.. FindAll().Take(rows)];
+		 [.. FindAll().Include(x => x.Transactions).Include(x => x.Employees).Include(x => x.Accounts).Take(rows)];
 }
 

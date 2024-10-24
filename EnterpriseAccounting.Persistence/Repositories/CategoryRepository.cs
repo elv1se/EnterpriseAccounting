@@ -15,6 +15,6 @@ internal class CategoryRepository(EnterpriseAccountingContext dbContext) :
 			.ToListAsync();
 
 	public IEnumerable<Category> GetCategoriesTop(int rows) =>
-		 [.. FindAll().Take(rows)];
+		 [.. FindAll().Include(x => x.Operations).Take(rows)];
 }
 

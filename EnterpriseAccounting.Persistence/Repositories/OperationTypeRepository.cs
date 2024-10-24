@@ -14,6 +14,6 @@ internal class OperationTypeRepository(EnterpriseAccountingContext dbContext) : 
 			.ToListAsync();
 
 	public IEnumerable<OperationType> GetOperationTypesTop(int rows) =>
-		 [.. FindAll().Take(rows)];
+		 [.. FindAll().Include(x => x.Operations).Take(rows)];
 }
 

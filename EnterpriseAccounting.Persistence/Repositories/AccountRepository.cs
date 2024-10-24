@@ -15,6 +15,6 @@ internal class AccountRepository(EnterpriseAccountingContext dbContext) :
 			.ToListAsync();
 
 	public IEnumerable<Account> GetAccountsTop(int rows) =>
-		 [.. FindAll().Take(rows)];
+		 [.. FindAll().Include(x => x.Department).Take(rows)];
 }
 

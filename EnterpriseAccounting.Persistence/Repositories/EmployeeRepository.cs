@@ -18,5 +18,5 @@ internal class EmployeeRepository(EnterpriseAccountingContext EnterpriseAccounti
 			.ToListAsync();
 
 	public IEnumerable<Employee> GetEmployeesTop(int rows) =>
-		 [.. FindAll().Take(rows)];
+		 [.. FindAll().Include(x => x.Department).Take(rows)];
 }
