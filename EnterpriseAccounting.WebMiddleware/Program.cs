@@ -289,20 +289,20 @@ public class Program
 
 		if (context.Request.Query.ContainsKey("number"))
 		{
-			searchData.BankName = context.Request.Query["number"];
+			searchData.Number = context.Request.Query["number"];
 		}
 		if (context.Request.Query.ContainsKey("bank"))
 		{
-			searchData.Number = context.Request.Query["bank"];
+			searchData.BankName = context.Request.Query["bank"];
 		}
 
 		IAccountService? cachedAccountsService = context.RequestServices.GetService<IServiceManager>()?.AccountService;
 
 		cachedAccountsService?.AddAccountsByCondition(
-			"Accounts20",
+			"Account20",
 			x => x.BankName == searchData.BankName &&
 				  x.Number.Contains(searchData.Number));
-		var Accounts = cachedAccountsService?.GetAccounts("Accounts20");
+		var Accounts = cachedAccountsService?.GetAccounts("Account20");
 
 		context.Response.Cookies.Append("searchData", JsonSerializer.Serialize(searchData), new CookieOptions
 		{
@@ -323,16 +323,16 @@ public class Program
 		}
 		tableHtml += "</TABLE>";
 
-		string selectedCity = searchData.BankName ?? string.Empty;
+		string selectedBank = searchData.BankName ?? string.Empty;
 
 		string formHtml = "<HTML><HEAD><TITLE>Форма поиска 2</TITLE></HEAD>" +
 			"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
 			"<BODY>" +
 			"<FORM method='get' action='/searchform2'>" +
-			"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Number + "'>" +
-			"<BR>Выберите город:<BR><SELECT name='city'>" +
-			"<OPTION value='Белагропромбанк ОАО'" + (selectedCity == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
-			"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedCity == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
+			"Поиск по номеру счета:<BR><INPUT type='text' name='number' value='" + searchData.Number + "'>" +
+			"<BR>Выберите банк:<BR><SELECT name='bank'>" +
+			"<OPTION value='Белагропромбанк ОАО'" + (selectedBank == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
+			"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedBank == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
 			"</SELECT><BR><BR><INPUT type='submit' value='Искать'>" +
 			"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Number + " " + searchData.BankName + "\");'></FORM>" +
 			"<BR><A href='/'>Главная</A>" +
@@ -354,20 +354,20 @@ public class Program
 
 		if (context.Request.Query.ContainsKey("number"))
 		{
-			searchData.BankName = context.Request.Query["number"];
+			searchData.Number = context.Request.Query["number"];
 		}
 		if (context.Request.Query.ContainsKey("bank"))
 		{
-			searchData.Number = context.Request.Query["bank"];
+			searchData.BankName = context.Request.Query["bank"];
 		}
 
 		IAccountService? cachedAccountsService = context.RequestServices.GetService<IServiceManager>()?.AccountService;
 
 		cachedAccountsService?.AddAccountsByCondition(
-			"Accounts20",
-			x => x.BankName.Contains(searchData.BankName) &&
+			"Account20",
+			x => x.BankName == (searchData.BankName) &&
 					x.Number.Contains(searchData.Number));
-		var Accounts = cachedAccountsService?.GetAccounts("Accounts20");
+		var Accounts = cachedAccountsService?.GetAccounts("Account20");
 
 		context.Session.SetString("searchData", JsonSerializer.Serialize(searchData));
 
@@ -385,16 +385,16 @@ public class Program
 		}
 		tableHtml += "</TABLE>";
 
-		string selectedCity = searchData.BankName ?? string.Empty;
+		string selectedBank = searchData.BankName ?? string.Empty;
 
 		string formHtml = "<HTML><HEAD><TITLE>Форма поиска 2</TITLE></HEAD>" +
 		"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
 		"<BODY>" +
 		"<FORM method='get' action='/searchform2'>" +
-		"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Number + "'>" +
-		"<BR>Выберите город:<BR><SELECT name='city'>" +
-		"<OPTION value='Белагропромбанк ОАО'" + (selectedCity == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
-		"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedCity == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
+		"Поиск по номеру счета:<BR><INPUT type='text' name='number' value='" + searchData.Number + "'>" +
+		"<BR>Выберите банк:<BR><SELECT name='bank'>" +
+		"<OPTION value='Белагропромбанк ОАО'" + (selectedBank == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
+		"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedBank == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
 		"</SELECT><BR><BR><INPUT type='submit' value='Искать'>" +
 		"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Number + " " + searchData.BankName + "\");'></FORM>" +
 		"<BR><A href='/'>Главная</A>" +
