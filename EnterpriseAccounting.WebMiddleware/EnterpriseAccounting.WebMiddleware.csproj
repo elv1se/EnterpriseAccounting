@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EnterpriseAccounting.Application\EnterpriseAccounting.Application.csproj" />
+    <ProjectReference Include="..\EnterpriseAccounting.Persistence\EnterpriseAccounting.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>

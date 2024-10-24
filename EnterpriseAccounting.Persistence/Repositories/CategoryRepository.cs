@@ -1,8 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using CategoryEnterprise.Domain.Entities;
-using CategoryEnterprise.Domain.Abstractions;
 using Contracts.Repositories;
-using EnterpriseAccounting.Persistence;
 using EnterpriseAccounting.Domain.Models;
 
 namespace EnterpriseAccounting.Persistence.Repositories;
