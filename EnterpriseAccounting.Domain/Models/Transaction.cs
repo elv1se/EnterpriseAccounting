@@ -1,6 +1,6 @@
 ﻿namespace EnterpriseAccounting.Domain.Models;
 
-public partial class Transaction
+public class Transaction
 {
 	public Guid TransactionId { get; set; }
 

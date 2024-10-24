@@ -1,6 +1,6 @@
 ﻿namespace EnterpriseAccounting.Domain.Models;
 
-public partial class OperationType
+public class OperationType
 {
 	public Guid OperationTypeId { get; set; }
 

@@ -9,19 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseAccounting.Persistence.Repositories;
 
-internal abstract class RepositoryBase<T>(EnterpriseAccountingContext appDbContext) : IRepositoryBase<T> where T : class
+internal abstract class RepositoryBase<T>(EnterpriseAccountingContext EnterpriseAccountingContext) : IRepositoryBase<T> where T : class
 {
-	protected EnterpriseAccountingContext AppDbContext = appDbContext;
+	protected EnterpriseAccountingContext EnterpriseAccountingContext = EnterpriseAccountingContext;
 
 	public IQueryable<T> FindAll(bool trackChanges = false) =>
-		!trackChanges ? AppDbContext.Set<T>()
-		.AsNoTracking() : AppDbContext.Set<T>();
+		!trackChanges ? EnterpriseAccountingContext.Set<T>()
+		.AsNoTracking() : EnterpriseAccountingContext.Set<T>();
 
 	public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false) =>
-		!trackChanges ? AppDbContext.Set<T>().Where(expression)
-		.AsNoTracking() : AppDbContext.Set<T>().Where(expression);
+		!trackChanges ? EnterpriseAccountingContext.Set<T>().Where(expression)
+		.AsNoTracking() : EnterpriseAccountingContext.Set<T>().Where(expression);
 
-	public void Create(T entity) => AppDbContext.Set<T>().Add(entity);
-	public void Update(T entity) => AppDbContext.Set<T>().Update(entity);
-	public void Delete(T entity) => AppDbContext.Set<T>().Remove(entity);
+	public void Create(T entity) => EnterpriseAccountingContext.Set<T>().Add(entity);
+	public void Update(T entity) => EnterpriseAccountingContext.Set<T>().Update(entity);
+	public void Delete(T entity) => EnterpriseAccountingContext.Set<T>().Remove(entity);
 }

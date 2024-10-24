@@ -1,6 +1,6 @@
 ﻿namespace EnterpriseAccounting.Domain.Models;
 
-public partial class Department
+public class Department
 {
 	public Guid DepartmentId { get; set; }
 
