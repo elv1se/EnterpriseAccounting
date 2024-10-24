@@ -37,7 +37,7 @@ public class Program
 		app.Run(async (context) =>
 		{
 			IEmployeeService cachedAccountsService = context.RequestServices.GetService<IEmployeeService>();
-			cachedAccountsService?.AddEmployees("Employees20");
+			cachedAccountsService?.AddEmployees("Accounts20");
 
 			string HtmlString = "<HTML><HEAD><TITLE>Главная</TITLE></HEAD>" +
 			"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
@@ -121,7 +121,7 @@ public class Program
 			HtmlString += "<TD>Название отдела</TD>";
 			HtmlString += "<TD>Название банка</TD>";
 			HtmlString += "</TH>";
-			foreach (Account Account in Accounts)
+			foreach (Account Account in Accounts ?? [])
 			{
 				HtmlString += "<TR>";
 				HtmlString += "<TD>" + Account.AccountId + "</TD>";
@@ -300,7 +300,7 @@ public class Program
 
 		cachedAccountsService?.AddAccountsByCondition(
 			"Accounts20",
-			x => x.BankName.Contains(searchData.BankName) &&
+			x => x.BankName == searchData.BankName &&
 				  x.Number.Contains(searchData.Number));
 		var Accounts = cachedAccountsService?.GetAccounts("Accounts20");
 
@@ -312,7 +312,7 @@ public class Program
 		string tableHtml = "<TABLE BORDER=1 cellspacing=0>";
 		tableHtml += "<TH><TD>Тип счета</TD><TD>Номер счета</TD><TD>Название банка</TD></TH>";
 
-		foreach (Account Account in Accounts ?? Enumerable.Empty<Account>())
+		foreach (Account Account in Accounts ?? [])
 		{
 			tableHtml += "<TR>";
 			tableHtml += $"<TD>{Account.AccountId}</TD>";

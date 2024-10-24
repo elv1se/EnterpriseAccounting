@@ -28,7 +28,7 @@ internal sealed class CategoryService(IRepositoryManager rep, IMemoryCache memor
 
 		_cache.Set(cacheKey, categories, new MemoryCacheEntryOptions
 		{
-			AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(248)
+			AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(298)
 		});
 	}
 
@@ -38,7 +38,7 @@ internal sealed class CategoryService(IRepositoryManager rep, IMemoryCache memor
 
 		_cache.Set(cacheKey, categories, new MemoryCacheEntryOptions
 		{
-			AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(248)
+			AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(298)
 		});
 	}
 
@@ -51,7 +51,7 @@ internal sealed class CategoryService(IRepositoryManager rep, IMemoryCache memor
 			{
 				_cache.Set(cacheKey, categories,
 				new MemoryCacheEntryOptions()
-					.SetAbsoluteExpiration(TimeSpan.FromSeconds(248)));
+					.SetAbsoluteExpiration(TimeSpan.FromSeconds(298)));
 			}
 		}
 		return categories;

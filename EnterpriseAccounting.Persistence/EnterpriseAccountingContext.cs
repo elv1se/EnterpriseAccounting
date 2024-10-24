@@ -28,9 +28,6 @@ public partial class EnterpriseAccountingContext : DbContext
 
 	public virtual DbSet<Transaction> Transactions { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		=> optionsBuilder.UseSqlServer("Server=D1AMOND;Database=EnterpriseAccounting;Integrated Security=true; Trusted_Connection=True; TrustServerCertificate=True;");
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Account>(entity =>

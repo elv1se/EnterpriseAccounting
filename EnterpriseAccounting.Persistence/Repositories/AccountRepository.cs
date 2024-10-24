@@ -7,8 +7,6 @@ namespace EnterpriseAccounting.Persistence.Repositories;
 internal class AccountRepository(EnterpriseAccountingContext dbContext) : 
 	RepositoryBase<Account>(dbContext), IAccountRepository
 {
-	private readonly EnterpriseAccountingContext _dbContext = dbContext;
-
 	public async Task<IEnumerable<Account>> GetAllAccountsAsync(bool trackChanges = false) =>
 		await FindAll(trackChanges)
 			.OrderBy(c => c.Number)
