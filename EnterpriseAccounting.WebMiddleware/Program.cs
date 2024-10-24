@@ -26,29 +26,29 @@ public class Program
 		ConfigureApp(app);
 
 		app.Map("/info", Info);
-		app.Map("/students", Students);
+		app.Map("/accounts", Accounts);
 		app.Map("/employees", Employees);
-		app.Map("/courses", Courses);
-		app.Map("/payments", Payments);
-		app.Map("/jobtitles", JobTitles);
+		app.Map("/transactions", Transactions);
+		app.Map("/operations", Operations);
+		app.Map("/departments", Departments);
 		app.Map("/searchform1", SearchForm1);
 		app.Map("/searchform2", SearchForm2);
 
 		app.Run(async (context) =>
 		{
-			IEmployeeService cachedStudentsService = context.RequestServices.GetService<IEmployeeService>();
-			cachedStudentsService?.AddEmployees("Employees20");
+			IEmployeeService cachedAccountsService = context.RequestServices.GetService<IEmployeeService>();
+			cachedAccountsService?.AddEmployees("Employees20");
 
 			string HtmlString = "<HTML><HEAD><TITLE>Главная</TITLE></HEAD>" +
 			"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
 			"<BODY><H1>Главная</H1>";
 			HtmlString += "<H2>Данные записаны в кэш сервера</H2>";
 			HtmlString += "<BR><A href='/'>Главная</A>";
-			HtmlString += "<BR><A href='/students'>Слушатели</A>";
+			HtmlString += "<BR><A href='/departments'>Отделы</A>";
 			HtmlString += "<BR><A href='/employees'>Работники</A>";
-			HtmlString += "<BR><A href='/courses'>Курсы</A>";
-			HtmlString += "<BR><A href='/payments'>Платежи</A>";
-			HtmlString += "<BR><A href='/jobtitles'>Должности</A>";
+			HtmlString += "<BR><A href='/transactions'>Транзакции</A>";
+			HtmlString += "<BR><A href='/operations'>Операции</A>";
+			HtmlString += "<BR><A href='/accounts'>Счета</A>";
 			HtmlString += "<BR><A href='/info'>Информация о клиенте</A>";
 			HtmlString += "<BR><A href='/searchform1'>searchform1</A>";
 			HtmlString += "<BR><A href='/searchform2'>searchform2</A>";
@@ -103,46 +103,32 @@ public class Program
 		});
 	}
 
-	private static void Students(IApplicationBuilder app)
+	private static void Accounts(IApplicationBuilder app)
 	{
 		app.Run(async context =>
 		{
-			IStudentService? cachedStudentsService = context.RequestServices.GetService<IServiceManager>()?.StudentService;
-			IEnumerable<Student>? students = cachedStudentsService?.GetStudents("Students20");
+			IAccountService? cachedAccountsService = context.RequestServices.GetService<IServiceManager>()?.AccountService;
+			IEnumerable<Account>? Accounts = cachedAccountsService?.GetAccounts("Accounts20");
 
 			string HtmlString = "<HTML><HEAD>" +
-				"<TITLE>Слушатели</TITLE>" +
+				"<TITLE>Счета</TITLE>" +
 				"<META http-equiv='Content-Type' content='text/html; charset=utf-8 >'" +
-				"</HEAD><BODY><H1>Список слушателей</H1>" +
+				"</HEAD><BODY><H1>Список счетов</H1>" +
 				"<TABLE BORDER=1 cellspacing=0>";
 			HtmlString += "<TH>";
-			HtmlString += "<TD>Фамилия</TD>";
-			HtmlString += "<TD>Имя</TD>";
-			HtmlString += "<TD>Адрес</TD>";
-			HtmlString += "<TD>Дата рождения</TD>";
-			HtmlString += "<TD>Номер пасспорта</TD>";
-			HtmlString += "<TD>Номер телефона</TD>";
-			HtmlString += "<TD>Названия курсов</TD>";
-			HtmlString += "<TD>Оплаты</TD>";
+			HtmlString += "<TD>Тип счета</TD>";
+			HtmlString += "<TD>Номер счета</TD>";
+			HtmlString += "<TD>Название отдела</TD>";
+			HtmlString += "<TD>Название банка</TD>";
 			HtmlString += "</TH>";
-			foreach (Student student in students)
+			foreach (Account Account in Accounts)
 			{
 				HtmlString += "<TR>";
-				HtmlString += "<TD>" + student.StudentId + "</TD>";
-				HtmlString += "<TD>" + student.Surname + "</TD>";
-				HtmlString += "<TD>" + student.Name + "</TD>";
-				HtmlString += "<TD>" + student.Address + "</TD>";
-				HtmlString += "<TD>" + student.BirthDate + "</TD>";
-				HtmlString += "<TD>" + student.PassportNumber + "</TD>";
-				HtmlString += "<TD>" + student.Phone + "</TD>";
-				HtmlString += "<TD>";
-				foreach (string courseName in student.Courses.Select(x => x.Name))
-					HtmlString += courseName + "<BR>";
-				HtmlString += "</TD>";
-				HtmlString += "<TD>";
-				foreach (string pay in student.Payments.Select(x => x.Purpose + ": " + x.Amount))
-					HtmlString += pay + "<BR>";
-				HtmlString += "</TD>";
+				HtmlString += "<TD>" + Account.AccountId + "</TD>";
+				HtmlString += "<TD>" + Account.Type + "</TD>";
+				HtmlString += "<TD>" + Account.Number + "</TD>";
+				HtmlString += "<TD>" + Account.Department.Name + "</TD>";
+				HtmlString += "<TD>" + Account.BankName + "</TD>";
 				HtmlString += "</TR>";
 			}
 			HtmlString += "</table></BODY></HTML>";
@@ -164,15 +150,10 @@ public class Program
 				"<BODY><H1>Список сотрудников</H1>" +
 				"<TABLE BORDER=1 cellspacing=0>";
 			HtmlString += "<TH>";
-			HtmlString += "<TD>Должность</TD>";
+			HtmlString += "<TD>Название отдела</TD>";
 			HtmlString += "<TD>Фамилия</TD>";
 			HtmlString += "<TD>Имя</TD>";
-			HtmlString += "<TD>Адрес</TD>";
-			HtmlString += "<TD>Дата рождения</TD>";
-			HtmlString += "<TD>Номер пасспорта</TD>";
-			HtmlString += "<TD>Номер телефона</TD>";
-			HtmlString += "<TD>Образование</TD>";
-			HtmlString += "<TD>Названия курсов</TD>";
+			HtmlString += "<TD>Должность</TD>";
 			HtmlString += "</TH>";
 			foreach (Employee employee in employees)
 			{
@@ -190,42 +171,68 @@ public class Program
 		});
 	}
 
-	private static void Courses(IApplicationBuilder app)
+	private static void Transactions(IApplicationBuilder app)
 	{
 		app.Run(async context =>
 		{
-			ICourseService? cachedCoursesService = context.RequestServices.GetService<IServiceManager>()?.CourseService;
-			IEnumerable<Course>? courses = cachedCoursesService?.GetCourses("Courses20");
+			ITransactionService? cachedTransactionsService = context.RequestServices.GetService<IServiceManager>()?.TransactionService;
+			IEnumerable<Transaction>? Transactions = cachedTransactionsService?.GetTransactions("Transactions20");
 
 			string HtmlString = "<HTML><HEAD>" +
-				"<TITLE>Курсы</TITLE></HEAD>" +
+				"<TITLE>Транзакции</TITLE></HEAD>" +
 				"<META http-equiv='Content-Type' content='text/html; charset=utf-8 />'" +
-				"<BODY><H1>Список курсов</H1>" +
+				"<BODY><H1>Список транзакций</H1>" +
 				"<TABLE BORDER=1 cellspacing=0>";
 			HtmlString += "<TH>";
-			HtmlString += "<TD>Название курсов</TD>";
-			HtmlString += "<TD>Стоимость обучения</TD>";
-			HtmlString += "<TD>Доступные места</TD>";
-			HtmlString += "<TD>Часы</TD>";
-			HtmlString += "<TD>Интенсивность</TD>";
-			HtmlString += "<TD>Программа</TD>";
-			HtmlString += "<TD>Преподаватель</TD>";
-			HtmlString += "<TD>Слушатели</TD>";
+			HtmlString += "<TD>Тип транзакции</TD>";
+			HtmlString += "<TD>Название отдела</TD>";
+			HtmlString += "<TD>Название операции</TD>";
 			HtmlString += "</TH>";
-			foreach (Course course in courses)
+			foreach (Transaction Transaction in Transactions)
 			{
 				HtmlString += "<TR>";
-				HtmlString += "<TD>" + course.CourseId + "</TD>";
-				HtmlString += "<TD>" + course.Name + "</TD>";
-				HtmlString += "<TD>" + course.TuitionFee + "</TD>";
-				HtmlString += "<TD>" + course.AvailableSeats + "</TD>";
-				HtmlString += "<TD>" + course.Hours + "</TD>";
-				HtmlString += "<TD>" + course.Intensity + "</TD>";
-				HtmlString += "<TD>" + course.TrainingProgram + "</TD>";
-				HtmlString += "<TD>" + course.Employee.Surname + " " + course.Employee.Name + "</TD>";
+				HtmlString += "<TD>" + Transaction.TransactionId + "</TD>";
+				HtmlString += "<TD>" + Transaction.Type + "</TD>";
+				HtmlString += "<TD>" + Transaction.Department.Name + "</TD>";
+				HtmlString += "<TD>" + Transaction.Operation.Name + "</TD>";
+				HtmlString += "</TR>";
+			}
+			HtmlString += "</table></BODY></HTML>";
+
+			await context.Response.WriteAsync(HtmlString);
+		});
+	}
+
+	private static void Operations(IApplicationBuilder app)
+	{
+		app.Run(async context =>
+		{
+			IOperationService? cachedOperationsService = context.RequestServices.GetService<IServiceManager>()?.OperationService;
+			IEnumerable<Operation>? Operations = cachedOperationsService?.GetOperations("Operations20");
+
+			string HtmlString = "<HTML><HEAD>" +
+				"<TITLE>Операции</TITLE></HEAD>" +
+				"<META http-equiv='Content-Type' content='text/html; charset=utf-8 />'" +
+				"<BODY><H1>Список операций</H1>" +
+				"<TABLE BORDER=1 cellspacing=0>";
+			HtmlString += "<TH>";
+			HtmlString += "<TD>Название операции</TD>";
+			HtmlString += "<TD>Название категории</TD>";
+			HtmlString += "<TD>Дата</TD>";
+			HtmlString += "<TD>Сумма</TD>";
+			HtmlString += "<TD>Типы транзакций</TD>";
+			HtmlString += "</TH>";
+			foreach (Operation Operation in Operations)
+			{
+				HtmlString += "<TR>";
+				HtmlString += "<TD>" + Operation.OperationId + "</TD>";
+				HtmlString += "<TD>" + Operation.Name + "</TD>";
+				HtmlString += "<TD>" + Operation.Category.Name + "</TD>";
+				HtmlString += "<TD>" + Operation.Date + "</TD>";
+				HtmlString += "<TD>" + Operation.Amount + "</TD>";
 				HtmlString += "<TD>";
-				foreach (string courseName in course.Students.Select(x => x.Surname + " " + x.Name + " " + x.Address))
-					HtmlString += courseName + "<BR>";
+				foreach (string empl in Operation.Transactions.Select(x => x.Type))
+					HtmlString += empl + "<BR>";
 				HtmlString += "</TD>";
 				HtmlString += "</TR>";
 			}
@@ -235,65 +242,29 @@ public class Program
 		});
 	}
 
-	private static void Payments(IApplicationBuilder app)
+	private static void Departments(IApplicationBuilder app)
 	{
 		app.Run(async context =>
 		{
-			IPaymentService? cachedPaymentsService = context.RequestServices.GetService<IServiceManager>()?.PaymentService;
-			IEnumerable<Payment>? payments = cachedPaymentsService?.GetPayments("Payments20");
+			IDepartmentService? cachedDepartmentsService = context.RequestServices.GetService<IServiceManager>()?.DepartmentService;
+			IEnumerable<Department>? Departments = cachedDepartmentsService?.GetDepartments("Departments20");
 
 			string HtmlString = "<HTML><HEAD>" +
-				"<TITLE>Платежи</TITLE></HEAD>" +
+				"<TITLE>Отделы</TITLE></HEAD>" +
 				"<META http-equiv='Content-Type' content='text/html; charset=utf-8 />'" +
-				"<BODY><H1>Список платежей</H1>" +
+				"<BODY><H1>Список отделов</H1>" +
 				"<TABLE BORDER=1 cellspacing=0>";
 			HtmlString += "<TH>";
-			HtmlString += "<TD>Название платежа</TD>";
-			HtmlString += "<TD>Дата</TD>";
-			HtmlString += "<TD>Сумма</TD>";
-			HtmlString += "<TD>Слушатель</TD>";
+			HtmlString += "<TD>Название отдела</TD>";
+			HtmlString += "<TD>Сотрудники</TD>";
 			HtmlString += "</TH>";
-			foreach (Payment payment in payments)
+			foreach (Department Department in Departments)
 			{
 				HtmlString += "<TR>";
-				HtmlString += "<TD>" + payment.PaymentId + "</TD>";
-				HtmlString += "<TD>" + payment.Purpose + "</TD>";
-				HtmlString += "<TD>" + payment.Date + "</TD>";
-				HtmlString += "<TD>" + payment.Amount + "</TD>";
-				HtmlString += "<TD>" + payment.Student.Surname + " " + payment.Student.Name + "</TD>";
-				HtmlString += "</TR>";
-			}
-			HtmlString += "</table></BODY></HTML>";
-
-			await context.Response.WriteAsync(HtmlString);
-		});
-	}
-
-	private static void JobTitles(IApplicationBuilder app)
-	{
-		app.Run(async context =>
-		{
-			IJobTitleService? cachedJobTitlesService = context.RequestServices.GetService<IServiceManager>()?.JobTitleService;
-			IEnumerable<JobTitle>? jobTitles = cachedJobTitlesService?.GetJobTitles("JobTitles20");
-
-			string HtmlString = "<HTML><HEAD>" +
-				"<TITLE>Должности</TITLE></HEAD>" +
-				"<META http-equiv='Content-Type' content='text/html; charset=utf-8 />'" +
-				"<BODY><H1>Список должностей</H1>" +
-				"<TABLE BORDER=1 cellspacing=0>";
-			HtmlString += "<TH>";
-			HtmlString += "<TD>Название должности</TD>";
-			HtmlString += "<TD>Зарплата</TD>";
-			HtmlString += "<TD>Сотрудник</TD>";
-			HtmlString += "</TH>";
-			foreach (JobTitle jobTitle in jobTitles)
-			{
-				HtmlString += "<TR>";
-				HtmlString += "<TD>" + jobTitle.JobTitleId + "</TD>";
-				HtmlString += "<TD>" + jobTitle.Name + "</TD>";
-				HtmlString += "<TD>" + jobTitle.Salary + "</TD>";
+				HtmlString += "<TD>" + Department.DepartmentId + "</TD>";
+				HtmlString += "<TD>" + Department.Name + "</TD>";
 				HtmlString += "<TD>";
-				foreach (string empl in jobTitle.Employees.Select(x => x.Surname + " " + x.Name + " " + x.Address))
+				foreach (string empl in Department.Employees.Select(x => x.Surname + " " + x.Name + " (" + x.Position + ")"))
 					HtmlString += empl + "<BR>";
 				HtmlString += "</TD>";
 
@@ -316,22 +287,22 @@ public class Program
 
 		ArgumentNullException.ThrowIfNull(searchData);
 
-		if (context.Request.Query.ContainsKey("name"))
+		if (context.Request.Query.ContainsKey("number"))
 		{
-			searchData.Name = context.Request.Query["name"];
+			searchData.BankName = context.Request.Query["number"];
 		}
-		if (context.Request.Query.ContainsKey("city"))
+		if (context.Request.Query.ContainsKey("bank"))
 		{
-			searchData.City = context.Request.Query["city"];
+			searchData.Number = context.Request.Query["bank"];
 		}
 
-		IStudentService? cachedStudentsService = context.RequestServices.GetService<IServiceManager>()?.StudentService;
+		IAccountService? cachedAccountsService = context.RequestServices.GetService<IServiceManager>()?.AccountService;
 
-		cachedStudentsService?.AddStudentsByCondition(
-			"Students20",
-			x => x.Address.Contains(searchData.City) &&
-				  x.Name.Contains(searchData.Name));
-		var students = cachedStudentsService?.GetStudents("Students20");
+		cachedAccountsService?.AddAccountsByCondition(
+			"Accounts20",
+			x => x.BankName.Contains(searchData.BankName) &&
+				  x.Number.Contains(searchData.Number));
+		var Accounts = cachedAccountsService?.GetAccounts("Accounts20");
 
 		context.Response.Cookies.Append("searchData", JsonSerializer.Serialize(searchData), new CookieOptions
 		{
@@ -339,34 +310,31 @@ public class Program
 		});
 
 		string tableHtml = "<TABLE BORDER=1 cellspacing=0>";
-		tableHtml += "<TH><TD>Фамилия</TD><TD>Имя</TD><TD>Адрес</TD><TD>Дата рождения</TD><TD>Номер паспорта</TD><TD>Номер телефона</TD></TH>";
+		tableHtml += "<TH><TD>Тип счета</TD><TD>Номер счета</TD><TD>Название банка</TD></TH>";
 
-		foreach (Student student in students ?? Enumerable.Empty<Student>())
+		foreach (Account Account in Accounts ?? Enumerable.Empty<Account>())
 		{
 			tableHtml += "<TR>";
-			tableHtml += $"<TD>{student.StudentId}</TD>";
-			tableHtml += $"<TD>{student.Surname}</TD>";
-			tableHtml += $"<TD>{student.Name}</TD>";
-			tableHtml += $"<TD>{student.Address}</TD>";
-			tableHtml += $"<TD>{student.BirthDate:dd-MM-yyyy}</TD>";
-			tableHtml += $"<TD>{student.PassportNumber}</TD>";
-			tableHtml += $"<TD>{student.Phone}</TD>";
+			tableHtml += $"<TD>{Account.AccountId}</TD>";
+			tableHtml += $"<TD>{Account.Type}</TD>";
+			tableHtml += $"<TD>{Account.Number}</TD>";
+			tableHtml += $"<TD>{Account.BankName}</TD>";
 			tableHtml += "</TR>";
 		}
 		tableHtml += "</TABLE>";
 
-		string selectedCity = searchData.City ?? string.Empty;
+		string selectedCity = searchData.BankName ?? string.Empty;
 
 		string formHtml = "<HTML><HEAD><TITLE>Форма поиска 2</TITLE></HEAD>" +
 			"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
 			"<BODY>" +
 			"<FORM method='get' action='/searchform2'>" +
-			"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Name + "'>" +
+			"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Number + "'>" +
 			"<BR>Выберите город:<BR><SELECT name='city'>" +
-			"<OPTION value='Гомель'" + (selectedCity == "Гомель" ? " selected" : "") + ">Гомель</OPTION>" +
-			"<OPTION value='Минск'" + (selectedCity == "Минск" ? " selected" : "") + ">Минск</OPTION>" +
+			"<OPTION value='Белагропромбанк ОАО'" + (selectedCity == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
+			"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedCity == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
 			"</SELECT><BR><BR><INPUT type='submit' value='Искать'>" +
-			"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Name + " " + searchData.City + "\");'></FORM>" +
+			"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Number + " " + searchData.BankName + "\");'></FORM>" +
 			"<BR><A href='/'>Главная</A>" +
 			"<H2>Результаты поиска:</H2>" +
 			tableHtml +
@@ -384,54 +352,51 @@ public class Program
 
 		ArgumentNullException.ThrowIfNull(searchData);
 
-		if (context.Request.Query.ContainsKey("name"))
+		if (context.Request.Query.ContainsKey("number"))
 		{
-			searchData.Name = context.Request.Query["name"];
+			searchData.BankName = context.Request.Query["number"];
 		}
-		if (context.Request.Query.ContainsKey("city"))
+		if (context.Request.Query.ContainsKey("bank"))
 		{
-			searchData.City = context.Request.Query["city"];
+			searchData.Number = context.Request.Query["bank"];
 		}
 
-		IStudentService? cachedStudentsService = context.RequestServices.GetService<IServiceManager>()?.StudentService;
+		IAccountService? cachedAccountsService = context.RequestServices.GetService<IServiceManager>()?.AccountService;
 
-		cachedStudentsService?.AddStudentsByCondition(
-			"Students20",
-			x => x.Address.Contains(searchData.City) &&
-					x.Name.Contains(searchData.Name));
-		var students = cachedStudentsService?.GetStudents("Students20");
+		cachedAccountsService?.AddAccountsByCondition(
+			"Accounts20",
+			x => x.BankName.Contains(searchData.BankName) &&
+					x.Number.Contains(searchData.Number));
+		var Accounts = cachedAccountsService?.GetAccounts("Accounts20");
 
 		context.Session.SetString("searchData", JsonSerializer.Serialize(searchData));
 
 		string tableHtml = "<TABLE BORDER=1 cellspacing=0>";
-		tableHtml += "<TH><TD>Фамилия</TD><TD>Имя</TD><TD>Адрес</TD><TD>Дата рождения</TD><TD>Номер паспорта</TD><TD>Номер телефона</TD></TH>";
+		tableHtml += "<TH><TD>Тип счета</TD><TD>Номер счета</TD><TD>Название банка</TD></TH>";
 
-		foreach (Student student in students ?? [])
+		foreach (Account Account in Accounts ?? [])
 		{
 			tableHtml += "<TR>";
-			tableHtml += $"<TD>{student.StudentId}</TD>";
-			tableHtml += $"<TD>{student.Surname}</TD>";
-			tableHtml += $"<TD>{student.Name}</TD>";
-			tableHtml += $"<TD>{student.Address}</TD>";
-			tableHtml += $"<TD>{student.BirthDate:dd-MM-yyyy}</TD>";
-			tableHtml += $"<TD>{student.PassportNumber}</TD>";
-			tableHtml += $"<TD>{student.Phone}</TD>";
+			tableHtml += $"<TD>{Account.AccountId}</TD>";
+			tableHtml += $"<TD>{Account.Type}</TD>";
+			tableHtml += $"<TD>{Account.Number}</TD>";
+			tableHtml += $"<TD>{Account.BankName}</TD>";
 			tableHtml += "</TR>";
 		}
 		tableHtml += "</TABLE>";
 
-		string selectedCity = searchData.City ?? string.Empty;
+		string selectedCity = searchData.BankName ?? string.Empty;
 
 		string formHtml = "<HTML><HEAD><TITLE>Форма поиска 2</TITLE></HEAD>" +
 		"<META http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
 		"<BODY>" +
 		"<FORM method='get' action='/searchform2'>" +
-		"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Name + "'>" +
+		"Поиск по Имени:<BR><INPUT type='text' name='name' value='" + searchData.Number + "'>" +
 		"<BR>Выберите город:<BR><SELECT name='city'>" +
-		"<OPTION value='Гомель'" + (selectedCity == "Гомель" ? " selected" : "") + ">Гомель</OPTION>" +
-		"<OPTION value='Минск'" + (selectedCity == "Минск" ? " selected" : "") + ">Минск</OPTION>" +
+		"<OPTION value='Белагропромбанк ОАО'" + (selectedCity == "Белагропромбанк ОАО" ? " selected" : "") + ">Белагропромбанк ОАО</OPTION>" +
+		"<OPTION value='АСБ Беларусбанк ОАО'" + (selectedCity == "АСБ Беларусбанк ОАО" ? " selected" : "") + ">АСБ Беларусбанк ОАО</OPTION>" +
 		"</SELECT><BR><BR><INPUT type='submit' value='Искать'>" +
-		"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Name + " " + searchData.City + "\");'></FORM>" +
+		"<INPUT type='button' value='Показать' onclick='alert(\"" + searchData.Number + " " + searchData.BankName + "\");'></FORM>" +
 		"<BR><A href='/'>Главная</A>" +
 		"<H2>Результаты поиска:</H2>" +
 		tableHtml +
@@ -443,7 +408,6 @@ public class Program
 
 public class SearchData
 {
-	public string Name { get; set; }
-	public string City { get; set; }
-}
+	public string Number { get; set; }
+	public string BankName { get; set; }
 }
